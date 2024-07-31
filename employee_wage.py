@@ -7,8 +7,6 @@
 
 """
 
-
-
 import random
 
 def welcome_message():
@@ -41,11 +39,10 @@ def check_attendance():
     Returns:
         str: "Present" or "Absent"
         
-        
     """
+    
+    
     return random.choice(["Present", "Absent"])
-
-
 
 def calculate_daily_wage(hours_worked, wage_per_hour=20):
     
@@ -66,37 +63,34 @@ def calculate_daily_wage(hours_worked, wage_per_hour=20):
         
     """
     
+    
     return hours_worked * wage_per_hour
 
 def main():
-
+    
     welcome_message()
     
     try:
-        
         attendance_full_time = check_attendance()
-        print(f"Employee is {attendance_full_time}")
-
         attendance_part_time = check_attendance()
-        print(f"Employee is {attendance_part_time}")
         
         FULL_DAY_HOURS = 8
         PART_DAY_HOURS = 4
-        
-        if attendance_full_time == "Present":
-            daily_wage = calculate_daily_wage(FULL_DAY_HOURS)
-            print(f"Daily Wage: ${daily_wage}")
-        else:
-            print("No wage, employee is absent")
 
+        match attendance_full_time:
+            case "Present":
+                daily_wage = calculate_daily_wage(FULL_DAY_HOURS)
+                print(f"Full Time - Daily Wage: ${daily_wage}")
+            case "Absent":
+                print("Full Time - No wage, employee is absent")
 
+        match attendance_part_time:
+            case "Present":
+                daily_wage = calculate_daily_wage(PART_DAY_HOURS)
+                print(f"Part Time - Daily Wage: ${daily_wage}")
+            case "Absent":
+                print("Part Time - No wage, employee is absent")
 
-        if attendance_part_time == "Present":
-            daily_wage = calculate_daily_wage(PART_DAY_HOURS)
-            print(f"Daily Wage: ${daily_wage}")
-        else:
-            print("No wage, employee is absent")
-        
     except Exception as e:
         print(f"An error occurred: {e}")
 
