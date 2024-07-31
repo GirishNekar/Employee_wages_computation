@@ -3,7 +3,8 @@
 @Date: 2024-07-27
 @Last Modified by: Girish
 @Last Modified time: 2024-07-31
-@Title: Employee Check Attendence Program
+@Title: Calculate daily w ages
+
 """
 
 
@@ -14,7 +15,6 @@ def welcome_message():
     
     
     """
-    
     Prints a welcome message for the Employee Wage Computation Program.
 
     Description:
@@ -23,6 +23,7 @@ def welcome_message():
     return : None
     
     """
+    
     
     print("Welcome to Employee Wage Computation Program")
 
@@ -46,14 +47,48 @@ def check_attendance():
 
 
 
+def calculate_daily_wage(hours_worked, wage_per_hour=20):
+    
+    
+    """
+    Calculates the daily wage of an employee based on hours worked.
+
+    Description:
+        This function computes the daily wage by multiplying the number of hours worked
+        by the wage per hour.
+
+    Parameters:
+        hours_worked (int): The number of hours worked in a day.
+        wage_per_hour (int, optional): The wage per hour. Defaults to 20.
+
+    Returns:
+        int: The calculated daily wage.
+        
+    """
+    
+    return hours_worked * wage_per_hour
+
 def main():
 
-    welcome_message()        
-    attendance = check_attendance()
-    print(f"Employee is {attendance}")
+    welcome_message()
+    
+    try:
+        
+        attendance = check_attendance()
+        print(f"Employee is {attendance}")
 
+        
+        FULL_DAY_HOURS = 8
 
+        
+        if attendance == "Present":
+            daily_wage = calculate_daily_wage(FULL_DAY_HOURS)
+            print(f"Daily Wage: ${daily_wage}")
+        else:
+            print("No wage, employee is absent")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
     main()
-
