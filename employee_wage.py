@@ -3,7 +3,7 @@
 @Date: 2024-07-27
 @Last Modified by: Girish
 @Last Modified time: 2024-07-31
-@Title: Calculate daily w ages
+@Title: Part time and full time employee wages
 
 """
 
@@ -74,21 +74,33 @@ def main():
     
     try:
         
-        attendance = check_attendance()
-        print(f"Employee is {attendance}")
+        attendance_full_time = check_attendance()
+        print(f"Employee is {attendance_full_time}")
 
+        attendance_part_time = check_attendance()
+        print(f"Employee is {attendance_part_time}")
         
         FULL_DAY_HOURS = 8
-
+        PART_DAY_HOURS = 4
         
-        if attendance == "Present":
+        if attendance_full_time == "Present":
             daily_wage = calculate_daily_wage(FULL_DAY_HOURS)
             print(f"Daily Wage: ${daily_wage}")
         else:
             print("No wage, employee is absent")
 
+
+
+        if attendance_part_time == "Present":
+            daily_wage = calculate_daily_wage(PART_DAY_HOURS)
+            print(f"Daily Wage: ${daily_wage}")
+        else:
+            print("No wage, employee is absent")
+        
     except Exception as e:
         print(f"An error occurred: {e}")
+
+
 
 if __name__ == "__main__":
     main()
