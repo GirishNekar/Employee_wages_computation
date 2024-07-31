@@ -3,7 +3,7 @@
 @Date: 2024-07-27
 @Last Modified by: Girish
 @Last Modified time: 2024-07-31
-@Title: monthly wagw calculation 
+@Title: monthly wage calculation 
 """
 
 import random
