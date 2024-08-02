@@ -1,169 +1,171 @@
 """
 @Author: Girish
-@Date: 2024-08-01
+@Date: 2024-08-02
 @Last Modified by: Girish
-@Last Modified time: 2024-08-01
-@Title: Generating wage for 4 different companies
+@Last Modified time: 2024-08-02
+@Title: Saving  wage for 4 different companies that are generated
 """
 
 import random
 
 class EmployeeWage:
-    @classmethod
-    def display_welcome_message(cls):
-        
-        
+    def __init__(self, company_name, wage_per_hour, full_time_hour, part_time_hour, working_day, total_working_hour):
+        self.company_name = company_name
+        self.wage_per_hour = wage_per_hour
+        self.full_time_hour = full_time_hour
+        self.part_time_hour = part_time_hour
+        self.working_day = working_day
+        self.total_working_hour = total_working_hour
+        self.wage_list = []
+        self.total_wage = 0
+
+    def display_welcome_message(self):
         """
         Description:
             Prints the welcome message.
 
         Parameters:
-            cls (type): The class on which this method is called
+            None
 
         Returns:
             None
         """
-        
-        
-        print("Hello Everyone, welcome to Employee Wage Computation")
+        print(f"Hello Everyone, welcome to Employee Wage Computation at {self.company_name}")
 
-
-
-    @classmethod
-    def get_employee_type(cls):
-        
-        
+    def get_employee_type(self):
         """
         Description:
             Returns whether the employee is working part-time or full-time.
 
         Parameters:
-            cls (type): The class on which this method is called
+            None
 
         Returns:
             str: "Part_time" or "Full_time"
         """
-        
-        
         return random.choice(["Part_time", "Full_time"])
 
-
-
-    @classmethod
-    def get_attendance(cls):
-        
-        
+    def get_attendance(self):
         """
         Description:
             Determines if the employee is present or absent.
 
         Parameters:
-            cls (type): The class on which this method is called
+            None
 
         Returns:
             str: "Present" if present, "Absent" if absent
         """
-        
-        
         return random.choice(["Present", "Absent"])
 
-
-
-    @classmethod
-    def employee_daily_wage(cls, wage_per_hour, work_hour):
-        
-        
+    def employee_daily_wage(self, work_hour):
         """
         Description:
             Calculates the employee's daily wage.
 
         Parameters:
-            cls (type): The class on which this method is called
-            wage_per_hour (int): Employee's wage per hour
             work_hour (int): Employee's working hours
 
         Returns:
             int: Daily wage
         """
-        
-        
-        return work_hour * wage_per_hour
+        return work_hour * self.wage_per_hour
 
-
-
-    @classmethod
-    def compute_monthly_wage(cls, company_name, wage_per_hour, full_time_hour, part_time_hour, working_day, total_working_hour):
-        
-        
+    def compute_monthly_wage(self):
         """
         Description:
             Computes the total wage for the employee for the month for a specific company.
 
         Parameters:
-            cls (type): The class on which this method is called
-            company_name (str): Name of the company
-            wage_per_hour (int): Wage per hour
-            full_time_hour (int): Full-time working hours per day
-            part_time_hour (int): Part-time working hours per day
-            working_day (int): Number of working days in a month
-            total_working_hour (int): Maximum allowable working hours in a month
+            None
 
         Returns:
             None
         """
-        
-        
-        cls.display_welcome_message()
-        print(f"Employee Wage for the month in {company_name}:")
+        self.display_welcome_message()
+        print(f"Employee Wage for the month in {self.company_name}:")
 
         work_day = 1
         work_hour = 0
-        wage_list = []
-        total_wage = 0
 
-        while work_hour <= total_working_hour and work_day <= working_day:
-            attendance = cls.get_attendance()
+        while work_hour <= self.total_working_hour and work_day <= self.working_day:
+            attendance = self.get_attendance()
             if attendance == "Present":
-                employee_type = cls.get_employee_type()
+                employee_type = self.get_employee_type()
                 if employee_type == "Full_time":
-                    daily_work_hours = full_time_hour
+                    daily_work_hours = self.full_time_hour
                 else:
-                    daily_work_hours = part_time_hour
+                    daily_work_hours = self.part_time_hour
 
                 work_hour += daily_work_hours
-                daily_wage = cls.employee_daily_wage(wage_per_hour, daily_work_hours)
-                wage_list.append(daily_wage)
-                total_wage += daily_wage
+                daily_wage = self.employee_daily_wage(daily_work_hours)
+                self.wage_list.append(daily_wage)
+                self.total_wage += daily_wage
             else:
-                wage_list.append(0)
+                self.wage_list.append(0)
 
             work_day += 1
 
-        print("Wage list of Employee:")
-        print(wage_list)
-        print(f"Total wage in {company_name}: ${total_wage}")
+        self.print_wage_details()
 
+    def print_wage_details(self):
+        """
+        Description:
+            Prints the wage list and total wage for the company.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
+        print("Wage list of Employee:")
+        print(self.wage_list)
+        print(f"Total wage in {self.company_name}: ${self.total_wage}")
+
+
+class EmpWageBuilder:
+    def __init__(self):
+        self.companies = []
+        self.total_wages = {}
+
+    def add_company(self, company_name, wage_per_hour, full_time_hour, part_time_hour, working_day, total_working_hour):
+        company = EmployeeWage(company_name, wage_per_hour, full_time_hour, part_time_hour, working_day, total_working_hour)
+        self.companies.append(company)
+
+    def compute_wages(self):
+        for company in self.companies:
+            company.compute_monthly_wage()
+            self.total_wages[company.company_name] = company.total_wage
+            print("\n" + "="*80 + "\n")
+
+    def print_total_wages(self):
+        """
+        Description:
+            Prints the total wage for each company.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
+        print("Total wages for each company:")
+        for company_name, total_wage in self.total_wages.items():
+            print(f"{company_name}: ${total_wage}")
 
 
 def main():
     try:
-        companies = [
-            {"name": "Google", "wage_per_hour": 20, "full_time_hour": 8, "part_time_hour": 4, "working_day": 20, "total_working_hour": 100},
-            {"name": "Microsoft", "wage_per_hour": 25, "full_time_hour": 9, "part_time_hour": 5, "working_day": 22, "total_working_hour": 110},
-            {"name": "Amazon", "wage_per_hour": 30, "full_time_hour": 10, "part_time_hour": 6, "working_day": 18, "total_working_hour": 90},
-            {"name": "Apple", "wage_per_hour": 35, "full_time_hour": 7, "part_time_hour": 3, "working_day": 21, "total_working_hour": 95},
-        ]
+        emp_wage_builder = EmpWageBuilder()
+        
+        emp_wage_builder.add_company("Google", 20, 8, 4, 20, 100)
+        emp_wage_builder.add_company("Microsoft", 25, 9, 5, 22, 110)
+        emp_wage_builder.add_company("Amazon", 30, 10, 6, 18, 90)
+        emp_wage_builder.add_company("Apple", 35, 7, 3, 21, 95)
 
-        for company in companies:
-            EmployeeWage.compute_monthly_wage(
-                company_name=company["name"],
-                wage_per_hour=company["wage_per_hour"],
-                full_time_hour=company["full_time_hour"],
-                part_time_hour=company["part_time_hour"],
-                working_day=company["working_day"],
-                total_working_hour=company["total_working_hour"]
-            )
-            print("\n" + "="*80 + "\n")
+        emp_wage_builder.compute_wages()
+        emp_wage_builder.print_total_wages()
 
     except Exception as e:
         print(e)
