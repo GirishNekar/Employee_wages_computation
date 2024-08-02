@@ -3,12 +3,12 @@
 @Date: 2024-08-02
 @Last Modified by: Girish
 @Last Modified time: 2024-08-02
-@Title: Saving  wage for 4 different companies that are generated
+@Title: Ability to manage wage for multiple companies
 """
 
 import random
 
-class EmployeeWage:
+class CompanyEmpWage:
     def __init__(self, company_name, wage_per_hour, full_time_hour, part_time_hour, working_day, total_working_hour):
         self.company_name = company_name
         self.wage_per_hour = wage_per_hour
@@ -16,10 +16,28 @@ class EmployeeWage:
         self.part_time_hour = part_time_hour
         self.working_day = working_day
         self.total_working_hour = total_working_hour
-        self.wage_list = []
         self.total_wage = 0
+        self.wage_list = []
 
-    def display_welcome_message(self):
+    def __str__(self):
+        return (f"Company: {self.company_name}, Wage Per Hour: {self.wage_per_hour}, "
+                f"Full Time Hour: {self.full_time_hour}, Part Time Hour: {self.part_time_hour}, "
+                f"Working Day: {self.working_day}, Total Working Hour: {self.total_working_hour}, "
+                f"Total Wage: {self.total_wage}, Wage List: {self.wage_list}")
+
+class EmpWageBuilder:
+    def __init__(self):
+        self.company_emp_wage_list = []
+
+    def add_company_emp_wage(self, company_emp_wage):
+        self.company_emp_wage_list.append(company_emp_wage)
+
+    def compute_wages(self):
+        for company in self.company_emp_wage_list:
+            self.compute_monthly_wage(company)
+
+    @staticmethod
+    def display_welcome_message():
         """
         Description:
             Prints the welcome message.
@@ -30,9 +48,10 @@ class EmployeeWage:
         Returns:
             None
         """
-        print(f"Hello Everyone, welcome to Employee Wage Computation at {self.company_name}")
+        print("Hello Everyone, welcome to Employee Wage Computation")
 
-    def get_employee_type(self):
+    @staticmethod
+    def get_employee_type():
         """
         Description:
             Returns whether the employee is working part-time or full-time.
@@ -45,7 +64,8 @@ class EmployeeWage:
         """
         return random.choice(["Part_time", "Full_time"])
 
-    def get_attendance(self):
+    @staticmethod
+    def get_attendance():
         """
         Description:
             Determines if the employee is present or absent.
@@ -58,114 +78,74 @@ class EmployeeWage:
         """
         return random.choice(["Present", "Absent"])
 
-    def employee_daily_wage(self, work_hour):
+    @staticmethod
+    def employee_daily_wage(wage_per_hour, work_hour):
         """
         Description:
             Calculates the employee's daily wage.
 
         Parameters:
+            wage_per_hour (int): Employee's wage per hour
             work_hour (int): Employee's working hours
 
         Returns:
             int: Daily wage
         """
-        return work_hour * self.wage_per_hour
+        return work_hour * wage_per_hour
 
-    def compute_monthly_wage(self):
+    def compute_monthly_wage(self, company):
         """
         Description:
             Computes the total wage for the employee for the month for a specific company.
 
         Parameters:
-            None
+            company (CompanyEmpWage): The company employee wage object
 
         Returns:
             None
         """
         self.display_welcome_message()
-        print(f"Employee Wage for the month in {self.company_name}:")
+        print(f"Employee Wage for the month in {company.company_name}:")
 
         work_day = 1
         work_hour = 0
+        total_wage = 0
 
-        while work_hour <= self.total_working_hour and work_day <= self.working_day:
+        while work_hour <= company.total_working_hour and work_day <= company.working_day:
             attendance = self.get_attendance()
             if attendance == "Present":
                 employee_type = self.get_employee_type()
                 if employee_type == "Full_time":
-                    daily_work_hours = self.full_time_hour
+                    daily_work_hours = company.full_time_hour
                 else:
-                    daily_work_hours = self.part_time_hour
+                    daily_work_hours = company.part_time_hour
 
                 work_hour += daily_work_hours
-                daily_wage = self.employee_daily_wage(daily_work_hours)
-                self.wage_list.append(daily_wage)
-                self.total_wage += daily_wage
+                daily_wage = self.employee_daily_wage(company.wage_per_hour, daily_work_hours)
+                company.wage_list.append(daily_wage)
+                total_wage += daily_wage
             else:
-                self.wage_list.append(0)
+                company.wage_list.append(0)
 
             work_day += 1
 
-        self.print_wage_details()
+        company.total_wage = total_wage
 
-    def print_wage_details(self):
-        """
-        Description:
-            Prints the wage list and total wage for the company.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
         print("Wage list of Employee:")
-        print(self.wage_list)
-        print(f"Total wage in {self.company_name}: ${self.total_wage}")
-
-
-class EmpWageBuilder:
-    def __init__(self):
-        self.companies = []
-        self.total_wages = {}
-
-    def add_company(self, company_name, wage_per_hour, full_time_hour, part_time_hour, working_day, total_working_hour):
-        company = EmployeeWage(company_name, wage_per_hour, full_time_hour, part_time_hour, working_day, total_working_hour)
-        self.companies.append(company)
-
-    def compute_wages(self):
-        for company in self.companies:
-            company.compute_monthly_wage()
-            self.total_wages[company.company_name] = company.total_wage
-            print("\n" + "="*80 + "\n")
-
-    def print_total_wages(self):
-        """
-        Description:
-            Prints the total wage for each company.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
-        print("Total wages for each company:")
-        for company_name, total_wage in self.total_wages.items():
-            print(f"{company_name}: ${total_wage}")
-
+        print(company.wage_list)
+        print(f"Total wage in {company.company_name}: ${company.total_wage}")
+        print("\n" + "="*80 + "\n")
 
 def main():
     try:
         emp_wage_builder = EmpWageBuilder()
-        
-        emp_wage_builder.add_company("Google", 20, 8, 4, 20, 100)
-        emp_wage_builder.add_company("Microsoft", 25, 9, 5, 22, 110)
-        emp_wage_builder.add_company("Amazon", 30, 10, 6, 18, 90)
-        emp_wage_builder.add_company("Apple", 35, 7, 3, 21, 95)
+
+        emp_wage_builder.add_company_emp_wage(CompanyEmpWage("Google", 20, 8, 4, 20, 100))
+        emp_wage_builder.add_company_emp_wage(CompanyEmpWage("Microsoft", 25, 9, 5, 22, 110))
+        emp_wage_builder.add_company_emp_wage(CompanyEmpWage("Amazon", 30, 10, 6, 18, 90))
+        emp_wage_builder.add_company_emp_wage(CompanyEmpWage("Apple", 35, 7, 3, 21, 95))
 
         emp_wage_builder.compute_wages()
-        emp_wage_builder.print_total_wages()
 
     except Exception as e:
         print(e)
